@@ -18,7 +18,12 @@
 このプロジェクトを実行するには、以下のPythonライブラリが必要です：
 - pandas
 - scikit-learn
-- IPython.display
+- KFolde
+- numpy
+- matplotlib
+- seaborn
+- random
+- lightgbm
 
 ## 実行手順
 
