@@ -1,107 +1,77 @@
+
 ---
 
-# README
+# ハウスプライス予測
 
-## プロジェクト概要
+このリポジトリには、機械学習モデルを使用して住宅価格を予測するためのJupyterノートブックが含まれています。このノートブックは、データの前処理、モデルの訓練、およびテストデータに対する予測を行うように設計されています。
 
-このプロジェクトでは、Kaggleの「House Prices - Advanced Regression Techniques」コンペティションのデータを使用して住宅価格を予測します。トレーニングデータを用いて機械学習モデルを訓練し、テストデータに対する予測を行います。その後、予測結果をCSVファイルに保存し、ダウンロードリンクを表示します。
+## ファイル
 
-## データセット
+- `house-price-1 (1).ipynb`: データの前処理、モデルの訓練、および予測のためのコードが含まれているメインのJupyterノートブック。
 
-使用するデータセットは以下の通りです：
-- `train.csv`: トレーニングデータ
-- `test.csv`: テストデータ
-- その他参考資料として、`sample_submission.csv`や`data_description.txt`も含まれます。
+## 必要条件
 
-## 必要なライブラリ
+このノートブックを実行するには、以下のPythonパッケージが必要です。
 
-このプロジェクトを実行するには、以下のPythonライブラリが必要です：
+- numpy
 - pandas
 - scikit-learn
-- KFolde
-- numpy
+- lightgbm
 - matplotlib
 - seaborn
-- random
-- lightgbm
+- jupyter
 
-## 実行手順
+これらのパッケージはpipを使用してインストールできます。
 
-### 1. データの読み込み
-
-まず、トレーニングデータとテストデータを読み込みます。
-
-```python
-import pandas as pd
-
-train_df = pd.read_csv('/kaggle/input/house-prices-advanced-regression-techniques/train.csv')
-test_df = pd.read_csv('/kaggle/input/house-prices-advanced-regression-techniques/test.csv')
+```bash
+pip install numpy pandas scikit-learn lightgbm matplotlib seaborn jupyter
 ```
 
-### 2. データの前処理
+## 使用方法
 
-数値データのみを使用し、欠損値を0で埋めます。必要に応じてこの部分を調整してください。
+1. このリポジトリをローカルマシンにクローンします。
+2. リポジトリディレクトリに移動します。
+3. Jupyterノートブックを開きます。
 
-```python
-X_train = train_df.drop(['Id', 'SalePrice'], axis=1).select_dtypes(include=[float, int]).fillna(0)
-y_train = train_df['SalePrice']
-X_test = test_df.drop(['Id'], axis=1).select_dtypes(include=[float, int]).fillna(0)
+```bash
+jupyter notebook house-price-1 (1).ipynb
 ```
 
-### 3. モデルのトレーニング
+4. ノートブックの指示に従って、データの前処理、モデルの訓練、および予測を行います。
 
-`RandomForestRegressor`を使用してモデルをトレーニングします。
+## ノートブック概要
 
-```python
-from sklearn.ensemble import RandomForestRegressor
+### データ前処理
 
-model = RandomForestRegressor()
-model.fit(X_train, y_train)
-```
+- `pandas`を使用してデータを読み込みます。
+- 欠損値の処理、カテゴリ変数のエンコード、および数値特徴量のスケーリングを行います。
 
-### 4. 予測の作成
+### モデル訓練
 
-テストデータに対して予測を行います。
+- `scikit-learn`のKFoldクロスバリデーションを使用してデータを分割します。
+- `lightgbm`を使用して回帰モデルを訓練し、住宅価格を予測します。
 
-```python
-predictions = model.predict(X_test)
-```
+### クロスバリデーション
 
-### 5. 予測結果の保存
+- KFoldクロスバリデーションを使用してモデルの性能を評価します。
+- 訓練セットを複数のフォールドに分割し、各フォールドでモデルを訓練および評価します。
 
-予測結果をCSVファイルとして保存します。
+### 予測
 
-```python
-submission = pd.DataFrame({'Id': test_df['Id'], 'SalePrice': predictions})
-output_path = '/mnt/data/submission.csv'
-submission.to_csv(output_path, index=False)
-print("Your submission was successfully saved!")
-```
+- 訓練後、モデルはテストセットに対して予測を行います。
+- 予測結果は`submission.csv`という名前のCSVファイルに保存されます。
 
-### 6. ダウンロードリンクの表示
+### 提出
 
-保存したCSVファイルのダウンロードリンクを表示します。
+- テストIDと予測された販売価格を含む提出用データフレームが作成されます。
+- 提出ファイルはノートブックから直接ダウンロードできます。
 
-```python
-from IPython.display import FileLink
+## ライセンス
 
-FileLink(output_path)
-```
+このプロジェクトはMITライセンスの下でライセンスされています。詳細はLICENSEファイルを参照してください。
 
-## 注意点
+## 謝辞
 
-- データの前処理は簡単な例として記載しています。実際のモデル性能を向上させるために、データの前処理や特徴エンジニアリングを行う必要があります。
-- モデルの選択やパラメータの調整も適宜行ってください。
-
-## ファイル構成
-
-- `train.csv`: トレーニングデータセット
-- `test.csv`: テストデータセット
-- `submission.csv`: 予測結果を保存するファイル
-- `house-price-1.ipynb`: 実行するJupyterノートブック（アップロードされたもの）
-
-## 実行方法
-
-上記のコードを順に実行することで、テストデータに対する予測を行い、結果をCSVファイルに保存してダウンロードリンクを表示できます。
+- このプロジェクトで使用されているデータセットは[Kaggle House Prices Competition](https://www.kaggle.com/c/house-prices-advanced-regression-techniques)から提供されています。
 
 ---
